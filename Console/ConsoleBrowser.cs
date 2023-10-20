@@ -56,16 +56,6 @@ namespace GARbro
             arc.Extract (entry);
         }
 
-        void TestArc (string[] args)
-        {
-/*
-            if (args.Length > 1)
-            {
-                uint pass = GameRes.Formats.IntOpener.EncodePassPhrase (args[1]);
-                Console.WriteLine ("{0:X8}", pass);
-            }
-*/
-        }
 
         ImageFormat FindFormat (string format)
         {
@@ -83,18 +73,8 @@ namespace GARbro
                     ListFormats();
                     return;
                 }
-                else if (args[argn].Equals ("-t"))
-                {
-                    TestArc (args);
-                    return;
-                }
                 else if (args[argn].Equals ("-c"))
                 {
-                    if (argn+1 >= args.Length)
-                    {
-                        Usage();
-                        return;
-                    }
                     var tag = args[argn+1];
                     m_image_format = ImageFormat.FindByTag (tag);
                     if (null == m_image_format)
@@ -108,36 +88,36 @@ namespace GARbro
                 {
                     m_extract_all = true;
                     ++argn;
-                    if (args.Length <= argn)
-                    {
-                        Usage();
-                        return;
-                    }
+                }
+                else if (args[argn].Equals ("-g"))
+                {
+                    m_arc_name = args[++argn];
+                    ++argn;
                 }
                 else
                 {
                     break;
                 }
-            }
-            if (argn >= args.Length)
-            {
-                Usage();
-                return;
+                if (argn >= args.Length)
+                {
+                        Usage();
+                        return;
+                }
             }
             DeserializeGameData();
             foreach (var file in VFS.GetFiles (args[argn]))
             {
-                m_arc_name = file.Name;
-                try
-                {
-                    VFS.ChDir (m_arc_name);
-                }
-                catch (Exception)
-                {
-                    Console.Error.WriteLine ("{0}: unknown format", m_arc_name);
-                    continue;
-                }
-                var arc = ((ArchiveFileSystem)VFS.Top).Source;
+                file.Game = m_arc_name;
+                ArcFile arc;
+                try {
+                    arc = ArcFile.TryOpen(file);
+                } catch (NotImplementedException) {
+                    Console.WriteLine("Could not find '{0}' in the games list.", m_arc_name);
+                    return;
+                } catch (OperationCanceledException) {
+                    Console.WriteLine("Consider using the -g option to specify which game the archive is for.");
+                    return;
+                } catch { return; }
                 if (args.Length > argn+1)
                 {
                     for (int i = argn+1; i < args.Length; ++i)
@@ -171,12 +151,22 @@ namespace GARbro
             }
         }
 
+        static string ProgramName
+        {
+                get
+                {
+                        return Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                }
+        }
+
         static void Usage ()
         {
-            Console.WriteLine ("Usage: gameres [OPTIONS] ARC [ENTRIES]");
+            Console.WriteLine ("Usage: {0} [OPTIONS] ARC [ENTRIES]", ProgramName);
             Console.WriteLine ("    -l          list recognized archive formats");
             Console.WriteLine ("    -x          extract all files");
             Console.WriteLine ("    -c FORMAT   convert images to specified format");
+            Console.WriteLine ("    -g GAME     use game name for decryption");
+            Console.WriteLine ("Games list: https://morkt.github.io/GARbro/supported.html");
             Console.WriteLine ("Without options displays contents of specified archive.");
         }
 

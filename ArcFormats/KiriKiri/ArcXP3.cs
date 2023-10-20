@@ -437,15 +437,18 @@ NextEntry:
             var alg = GuessCryptAlgorithm (file);
             if (null != alg)
                 return alg;
-            var options = Query<Xp3Options> (arcStrings.XP3EncryptedNotice);
-            return options.Scheme;
+            //var options = Query<Xp3Options> (arcStrings.XP3EncryptedNotice);
+            //return options.Scheme;
+            return GetScheme(file.Game);
         }
 
         public static ICrypt GetScheme (string scheme)
         {
             ICrypt algorithm;
-            if (string.IsNullOrEmpty (scheme) || !KnownSchemes.TryGetValue (scheme, out algorithm))
+            if (string.IsNullOrEmpty (scheme))
                 algorithm = NoCryptAlgorithm;
+            else if (!KnownSchemes.TryGetValue (scheme, out algorithm))
+                throw new NotImplementedException();
             return algorithm;
         }
 

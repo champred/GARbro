@@ -107,7 +107,9 @@ namespace GameRes.Formats.KiriKiri
             if (0x184D2204 == signature) // LZ4 magic
             {
                 // assume no scripts are compressed using LZ4, return decompressed stream right away
-                return DecompressLz4 (entry, header, input);
+                try {
+                    return DecompressLz4 (entry, header, input);
+                } catch (NotImplementedException){}//if decompression is not possible return compressed stream
             }
             if (0x66646D == signature) // 'mdf'
             {

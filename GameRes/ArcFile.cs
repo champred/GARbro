@@ -75,6 +75,7 @@ namespace GameRes
             if (entry.Size < 4)
                 return null;
             var file = VFS.OpenView (entry);
+            file.Game = entry.Game;
             try
             {
                 uint signature = file.View.ReadUInt32 (0);
@@ -89,10 +90,10 @@ namespace GameRes
                             return arc;
                         }
                     }
-                    catch (OperationCanceledException X)
+                    catch (Exception X) when (X is OperationCanceledException || X is NotImplementedException)
                     {
                         FormatCatalog.Instance.LastError = X;
-                        return null;
+                        throw;
                     }
                     catch (Exception X)
                     {
@@ -107,7 +108,7 @@ namespace GameRes
                 if (null != file)
                     file.Dispose();
             }
-            return null;
+            throw FormatCatalog.Instance.LastError;
         }
 
         /// <summary>

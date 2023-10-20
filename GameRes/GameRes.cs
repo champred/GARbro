@@ -40,6 +40,7 @@ namespace GameRes
         public virtual string Type   { get; set; }
         public         long   Offset { get; set; }
         public         uint   Size   { get; set; }
+        public         string Game   { get; set; }
 
         public Entry ()
         {

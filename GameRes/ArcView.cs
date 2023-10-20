@@ -127,6 +127,7 @@ namespace GameRes
         public long                 MaxOffset { get; private set; }
         public Frame                View { get; private set; }
         public string               Name { get; private set; }
+        public string               Game { get; set; }
 
         public ArcView (string name)
         {
