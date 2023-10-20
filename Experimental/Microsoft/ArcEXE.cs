@@ -37,11 +37,11 @@ namespace GameRes.Formats.Microsoft
     [ExportMetadata("Priority", -1)]
     public class ExeOpener : ArchiveFormat
     {
-        public override string         Tag { get => "EXE"; }
-        public override string Description { get => "Windows executable resources"; }
-        public override uint     Signature { get => 0; }
-        public override bool  IsHierarchic { get => true; }
-        public override bool      CanWrite { get => false; }
+        public override string         Tag => "EXE";
+        public override string Description => "Windows executable resources";
+        public override uint     Signature => 0;
+        public override bool  IsHierarchic => true;
+        public override bool      CanWrite => false;
 
         public ExeOpener ()
         {
@@ -158,8 +158,6 @@ namespace GameRes.Formats.Microsoft
             return id;
         }
 
-        static readonly byte[] VS_VERSION_INFO = Encoding.Unicode.GetBytes ("VS_VERSION_INFO");
-
         Stream OpenVersion (byte[] data, string name)
         {
             var input = new BinMemoryStream (data, name);
@@ -197,7 +195,7 @@ namespace GameRes.Formats.Microsoft
                 using (var text = new StreamWriter (output, new UTF8Encoding (false), 512, true))
                 {
                     string block_name = input.ReadCString (Encoding.Unicode);
-                    text.WriteLine ("BLOCK \"{0}\"\n{{", block_name);
+                    text.WriteLine ("BLOCK \"{0}\"\r\n{{", block_name);
                     long next_pos = (input.Position + 3) & -4L;
                     while (next_pos < end_pos)
                     {
