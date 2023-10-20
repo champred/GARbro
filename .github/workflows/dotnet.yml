@@ -22,3 +22,7 @@ jobs:
         dotnet-version: 7.0.x
     - name: Build
       run: dotnet build Console --os win
+    - uses: actions/upload-artifact@v3
+      with:
+        name: App
+        path: bin/Debug/net7.0-windows/win-x64/
