@@ -1,13 +1,15 @@
 GARbro
 ======
 
+[![.NET](https://github.com/champred/GARbro/actions/workflows/dotnet.yml/badge.svg)](https://github.com/champred/GARbro/actions/workflows/dotnet.yml)
+
 Visual Novels resource browser.
 
-Requires .NET Framework v4.6 or newer (https://www.microsoft.com/net)
+Requires .NET v7.0 (https://www.microsoft.com/net)
+
+Supports cross-compilation: `dotnet build --self-contained --os win`
 
 [Supported formats](https://morkt.github.io/GARbro/supported.html)
-
-[Download latest release](https://github.com/morkt/GARbro/releases)
 
 Operation
 ---------
