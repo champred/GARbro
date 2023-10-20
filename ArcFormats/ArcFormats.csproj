@@ -82,4 +82,7 @@
     <Compile Remove="WebP\ImageWEBP.cs" />
     <Compile Remove="WebP\Lossless.cs" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="mkdir -p $(TargetDir)win-x64/GameData; cp $(ProjectDir)Resources/Formats.dat $(TargetDir)win-x64/GameData"/>
+  </Target>
 </Project>
