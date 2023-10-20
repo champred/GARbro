@@ -108,11 +108,12 @@ namespace GARbro
             foreach (var file in VFS.GetFiles (args[argn]))
             {
                 file.Game = m_arc_name;
+                m_arc_name = file.Name;
                 ArcFile arc;
                 try {
                     arc = ArcFile.TryOpen(file);
                 } catch (NotImplementedException) {
-                    Console.WriteLine("Could not find '{0}' in the games list.", m_arc_name);
+                    Console.WriteLine("Could not find '{0}' in the games list.", file.Game);
                     return;
                 } catch (OperationCanceledException) {
                     Console.WriteLine("Consider using the -g option to specify which game the archive is for.");
